@@ -44,7 +44,7 @@
   [& args]
   (if (some #{"clones"} args) (def mode 'clones))
   (if (some #{"views"} args) (def mode 'views))
-  (def user (request "https://api.github.com/users/r00tman"))
+  (def user (request config/userUrl))
 
   (println "Fetching repo info...")
   (def repos (request (:repos_url user)))
