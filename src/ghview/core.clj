@@ -34,7 +34,9 @@
 (defn isTodayTimestamp
   [what]
   (and (some? what)
-       (= (java.time.LocalDate/now)
+       (= (java.util.Date/from
+            (.toInstant (.atStartOfDay (java.time.LocalDate/now))
+                        java.time.ZoneOffset/UTC))
           (clojure.instant/read-instant-date what)))
   )
 
@@ -53,7 +55,7 @@
                :width (min 40 (count repos))
                ))
 
-  (def repos_traffic (map traffic repos))
+  (def repos_traffic (pmap traffic repos))
 
   (def total_count (sum_non_nil (map :count repos_traffic)))
   (def total_uniques (sum_non_nil (map :uniques repos_traffic)))
@@ -84,4 +86,5 @@
                         :today_uniques total_today_uniques}
                        table))
   (clojure.pprint/print-table aug_table)
+  (shutdown-agents)
   )
